@@ -1,5 +1,6 @@
 package com.vedruna.proyectoFinalServidor1.persistance.model;
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.util.List;
 
@@ -13,7 +14,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @Table(name="technologies")
-public class Technology {
+public class Technology implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +33,7 @@ public class Technology {
     private String name;
 
     @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(name="technologies_used_in_projects", joinColumns={@JoinColumn(name="players_idplayer")}, inverseJoinColumns={@JoinColumn(name="trophies_idtrophie")})
+    @JoinTable(name="technologies_used_in_projects", joinColumns={@JoinColumn(name="technologies_tech_id")}, inverseJoinColumns={@JoinColumn(name="projects_project_id")})
     private List<Project> projectsTechnologies;
 
 
