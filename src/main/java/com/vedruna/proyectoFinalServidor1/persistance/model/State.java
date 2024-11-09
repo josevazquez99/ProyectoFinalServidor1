@@ -1,11 +1,9 @@
 package com.vedruna.proyectoFinalServidor1.persistance.model;
 
-import java.sql.Date;
 import java.util.List;
 
 
 
-import jakarta.annotation.Nonnull;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
