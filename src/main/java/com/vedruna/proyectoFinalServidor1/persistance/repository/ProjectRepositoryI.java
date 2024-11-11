@@ -9,4 +9,5 @@ import com.vedruna.proyectoFinalServidor1.persistance.model.Project;
 public interface ProjectRepositoryI extends JpaRepository<Project, Integer> {
     public Optional<Project> findByName(String name);
     
+    
 } 

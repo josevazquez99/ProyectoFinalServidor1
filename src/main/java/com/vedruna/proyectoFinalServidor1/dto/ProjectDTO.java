@@ -18,26 +18,15 @@ import lombok.NoArgsConstructor;
 public class ProjectDTO {
 
     private int id;
-
     private String name;
-
     private String description;
-
     private Date start_date;
-
     private Date end_date;
-
     private String repository_url;
-
     private String demo_url;
-
     private String picture;
-
-    private Integer  state;
-
-
+    private Integer  stateProject;
     private List<TechnologyDTO> technologies;
-
     private List<DeveloperDTO> developers;
 
 
@@ -50,7 +39,7 @@ public class ProjectDTO {
         this.repository_url = p.getRepository_url();
         this.demo_url = p.getDemo_url();
         this.picture = p.getPicture();
-        this.state = p.getStateProject() != null ? p.getStateProject().getId() : null; 
+        this.stateProject = p.getStateProject() != null ? p.getStateProject().getId() : null; 
         this.technologies=technologiesDTO(p.getTechnologies());
         this.developers=developersDTO(p.getDevelopers());
 

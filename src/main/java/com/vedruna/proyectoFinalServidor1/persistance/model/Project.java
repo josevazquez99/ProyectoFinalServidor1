@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.sql.Date;
 import java.util.List;
 
+import com.vedruna.proyectoFinalServidor1.validation.ValidUrl;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,7 +17,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -32,9 +36,11 @@ public class Project implements Serializable {
 
     @Column(name="project_name")
     @NotNull(message = "Name cannot be null")
+    @NotEmpty(message = "Name cannot be empty")
     private String name;
 
     @Column(name="description")
+    @Size(min = 2, max = 50, message = "Description must be between 2 and 50 characters")
     private String description;
     
     @Column(name="start_date")
@@ -44,9 +50,11 @@ public class Project implements Serializable {
     private Date end_date;
 
     @Column(name="repository_url")
+    @ValidUrl(message = "Invalid URL format")
     private String repository_url;
 
     @Column(name="demo_url")
+    @ValidUrl(message = "Invalid URL format")
     private String demo_url;
 
     @Column(name="picture")

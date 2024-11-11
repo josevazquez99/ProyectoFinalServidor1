@@ -2,24 +2,25 @@ package com.vedruna.proyectoFinalServidor1.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.vedruna.proyectoFinalServidor1.exceptions.ProjectNotFoundException;
+import com.vedruna.proyectoFinalServidor1.dto.ResponseDTO;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class ExceptionController {
 
-
-    @ExceptionHandler(ProjectNotFoundException.class)
-    public ResponseEntity<String> handleProjectNotFoundException(ProjectNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage()); 
+    // Captura de excepciones específicas
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ResponseDTO<String>> handleIllegalArgumentException(IllegalArgumentException ex) {
+        ResponseDTO<String> response = new ResponseDTO<>("Bad Request", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response); 
     }
 
+    // Captura de excepciones generales
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleGeneralException(Exception ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                             .body("Ocurrió un error inesperado. Por favor, revisa que todo esté correcto e inténtalo de nuevo.");
+    public ResponseEntity<ResponseDTO<String>> handleGeneralException(Exception ex) {
+        ResponseDTO<String> response = new ResponseDTO<>("Internal Server Error", "An unexpected error occurred. Check that the route is correct and everything else and try again.");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 }

@@ -16,9 +16,7 @@ public class StateDTO {
 
   
     private int id;
-
     private String name;
-
     private List<ProjectDTO> statesWithProject;
 
     public StateDTO(State s) {

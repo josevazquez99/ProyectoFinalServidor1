@@ -13,21 +13,12 @@ public class DeveloperDTO {
 
 
     private int id;
-
-    
     private String name;
-
-   
     private String surname;
-    
-    
     private String email;
-
-    
     private String linkedin_url;
-
-    
     private String github_url;
+    
 
 
     public DeveloperDTO(Developer d) {
