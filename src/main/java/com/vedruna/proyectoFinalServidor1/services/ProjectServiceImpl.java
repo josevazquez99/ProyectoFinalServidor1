@@ -2,7 +2,6 @@ package com.vedruna.proyectoFinalServidor1.services;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,6 +19,8 @@ public class ProjectServiceImpl implements ProjectServiceI {
     
     @Autowired
     ProjectRepositoryI projectRepository;
+    
+
     
     
     /**
@@ -106,10 +107,55 @@ public class ProjectServiceImpl implements ProjectServiceI {
         }
     }
 
-
+    /**
+     * Moves all projects from development to testing state.
+     *
+     * @return true if there are any projects to move, otherwise returns false
+     */
+    @Override
+    public boolean moveProjectToTesting() {
+        List<Project> projects = projectRepository.findAll();
+        boolean isUpdated = false;
+    
+        for (Project project : projects) {
+                project.getStateProject().setName("Testing");
+                projectRepository.save(project);
+                isUpdated = true;
+            }
+        
+    
+        return isUpdated;
+    }
+    
 
     
     
+
+    /**
+     * Moves all projects to production state.
+     *
+     * @return true if there are any projects to move, otherwise returns false
+     */
+    @Override
+    public boolean moveProjectToProduction() {
+        List<Project> projects = projectRepository.findAll();
+        boolean isUpdated = false;
+    
+        for (Project project : projects) {
+                project.getStateProject().setName("Production");
+                projectRepository.save(project);
+                isUpdated = true;
+            
+        }
+    
+        return isUpdated;
+    }
+    
+
+
+
+
+
     
 
 

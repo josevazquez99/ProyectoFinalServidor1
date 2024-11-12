@@ -17,8 +17,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -45,6 +45,7 @@ public class Project implements Serializable {
     private String description;
     
     @Column(name="start_date")
+    @FutureOrPresent(message = "The start date cannot be before today")
     private Date start_date;
 
     @Column(name="end_date")

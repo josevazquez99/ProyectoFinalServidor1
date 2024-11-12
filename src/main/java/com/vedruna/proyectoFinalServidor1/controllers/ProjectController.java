@@ -1,6 +1,6 @@
 package com.vedruna.proyectoFinalServidor1.controllers;
 
-import java.util.List;
+import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -51,39 +51,45 @@ public class ProjectController {
     }
 
 
+ 
     /**
      * Saves a project.
      *
      * @param project the project to be saved.
-     * @param bindingResult the binding result.
-     * @return the response with the saved project or a 400 if there are validation errors.
+     * @param bindingResult the binding result for validation errors.
+     * @return a ResponseEntity containing a ResponseDTO with either a success
+     *         message and the saved project, or an error message if validation
+     *         fails or the project's start date is before today.
      */
-    @PostMapping("/projects")
-    public ResponseEntity<ResponseDTO<Object>> postProject(@Valid @RequestBody Project project, BindingResult bindingResult) {
-        // Verificar si el campo 'name' está vacío o es nulo
-        if (project.getName() == null || project.getName().isEmpty()) {
-            ResponseDTO<Object> response = new ResponseDTO<>("Validation Error", "Name cannot be empty");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
-    
-        // Verificar si hay errores de validación
-        if (bindingResult.hasErrors()) {
-            StringBuilder errorMessages = new StringBuilder();
-            bindingResult.getFieldErrors().forEach(error -> 
-                errorMessages.append(error.getField())
-                             .append(": ")
-                             .append(error.getDefaultMessage())
-                             .append("\n")
-            );
-            ResponseDTO<Object> response = new ResponseDTO<>("Validation Error", errorMessages.toString());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
-    
-        // Si no hay errores, guardar el proyecto
-        projectService.saveProject(project);
-        ResponseDTO<Object> response = new ResponseDTO<>("Project successfully saved", project);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
+
+     @PostMapping("/projects")
+     public ResponseEntity<ResponseDTO<Object>> postProject(@Valid @RequestBody Project project, BindingResult bindingResult) {
+         // Verificar si hay errores de validación
+         if (bindingResult.hasErrors()) {
+             StringBuilder errorMessages = new StringBuilder();
+             bindingResult.getFieldErrors().forEach(error -> 
+                 errorMessages.append(error.getField())
+                              .append(": ")
+                              .append(error.getDefaultMessage())
+                              .append("\n")
+             );
+             ResponseDTO<Object> response = new ResponseDTO<>("Validation Error", errorMessages.toString());
+             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+         }
+     
+         // Verificar si start_date es antes de hoy
+         LocalDate today = LocalDate.now();
+         if (project.getStart_date().toLocalDate().isBefore(today)) {
+             ResponseDTO<Object> response = new ResponseDTO<>("Validation Error", "The start date cannot be before today.");
+             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+         }
+     
+         // Guardar el proyecto si no hay errores
+         projectService.saveProject(project);
+         ResponseDTO<Object> response = new ResponseDTO<>("Project created successfully", null); // Mensaje sin detalles
+         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+     }
+     
     
     /**
      * Deletes a project.
@@ -133,5 +139,49 @@ public class ProjectController {
         ResponseDTO<Object> response = new ResponseDTO<>("Project updated successfully", project);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+
+
+    /**
+     * Moves all projects to testing state.
+     *
+     * @return a ResponseEntity with a String body and a status of 200 if the
+     *         operation is successful, or a status of 404 if there are no
+     *         projects to move.
+     */
+    @PatchMapping("/projects/totesting")
+    public ResponseEntity<String> moveProjectToTesting() {
+        try {
+            boolean result = projectService.moveProjectToTesting();
+            if (result) {
+                return ResponseEntity.ok("Projects moved to testing successfully");
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No projects were moved to testing");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred while moving projects to testing: " + e.getMessage());
+        }
+    }
     
+    /**
+     * Moves all projects to production state.
+     *
+     * @return a ResponseEntity with a String body and a status of 200 if the
+     *         operation is successful, or a status of 404 if there are no
+     *         projects to move.
+     */
+    @PatchMapping("/projects/toprod")
+    public ResponseEntity<String> moveProjectToProduction() {
+        try {
+            boolean result = projectService.moveProjectToProduction();
+            if (result) {
+                return ResponseEntity.ok("Projects moved to production successfully");
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No projects were moved to production");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred while moving projects to production: " + e.getMessage());
+        }
+    }
 }
+
