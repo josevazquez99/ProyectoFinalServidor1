@@ -16,23 +16,36 @@ public class DeveloperController {
 
     @Autowired
     private DeveloperServiceI developerService;
-
+    /**
+     * Creates a new developer.
+     *
+     * @param developer the developer to be created, given in the request body
+     * @return a ResponseEntity with the HTTP status 201 (Created) and a ResponseDTO containing a success message
+     */
     @PostMapping("/developers")
-    public ResponseEntity<ResponseDTO<Developer>> postDeveloper(@RequestBody Developer developer) {
+    public ResponseEntity<ResponseDTO<String>> postDeveloper(@RequestBody Developer developer) {
         developerService.saveDeveloper(developer);
-        ResponseDTO<Developer> response = new ResponseDTO<>("Developer successfully saved", developer);
+        ResponseDTO<String> response = new ResponseDTO<>("Developer created successfully", null);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(response);
     }
-
+    /**
+     * Deletes a developer by their ID.
+     *
+     * @param id the ID of the developer to be deleted
+     * @return a ResponseEntity with the HTTP status 204 (No Content) and a ResponseDTO containing a success message
+     * @throws IllegalArgumentException if no developer exists with the given ID
+     */
     @DeleteMapping("/developers/{id}")
     public ResponseEntity<ResponseDTO<String>> deleteDeveloper(@PathVariable Integer id) {
         boolean developerDeleted = developerService.deleteDeveloper(id);
         if (!developerDeleted) {
-            throw new IllegalArgumentException("There isn't a developer with the ID: " + id);  // Lanzamos una excepción estándar.
+            throw new IllegalArgumentException("There isn't a developer with the ID: " + id);
         }
-        ResponseDTO<String> response = new ResponseDTO<>("Developer successfully removed", "Developer with ID " + id + " has been removed.");
+        ResponseDTO<String> response = new ResponseDTO<>("Developer successfully removed", null);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
     }
+    
+    
 }

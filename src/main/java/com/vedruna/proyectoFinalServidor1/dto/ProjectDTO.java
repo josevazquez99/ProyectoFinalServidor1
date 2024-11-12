@@ -25,10 +25,9 @@ public class ProjectDTO {
     private String repository_url;
     private String demo_url;
     private String picture;
-    private Integer  stateProject;
+    private String stateProjectName; // Cambiado a String para almacenar el nombre
     private List<TechnologyDTO> technologies;
     private List<DeveloperDTO> developers;
-
 
     public ProjectDTO(Project p) {
         this.id = p.getId();
@@ -39,24 +38,38 @@ public class ProjectDTO {
         this.repository_url = p.getRepository_url();
         this.demo_url = p.getDemo_url();
         this.picture = p.getPicture();
-        this.stateProject = p.getStateProject() != null ? p.getStateProject().getId() : null; 
-        this.technologies=technologiesDTO(p.getTechnologies());
-        this.developers=developersDTO(p.getDevelopers());
-
+        this.stateProjectName = p.getStateProject() != null ? p.getStateProject().getName() : null; // Obtener el nombre del estado
+        this.technologies = technologiesDTO(p.getTechnologies());
+        this.developers = developersDTO(p.getDevelopers());
     }
+
+    /**
+     * Converts a list of Technology objects to a list of TechnologyDTO objects.
+     *
+     * @param technologies the list of Technology objects to be converted
+     * @return a list of TechnologyDTO objects
+     */
     public List<TechnologyDTO> technologiesDTO(List<Technology> technologies) {
-        List<TechnologyDTO> technologiesRegistered = new ArrayList<TechnologyDTO>();
+        List<TechnologyDTO> technologiesRegistered = new ArrayList<>();
         for (Technology t : technologies) {
             technologiesRegistered.add(new TechnologyDTO(t));
         }
         return technologiesRegistered;
     }
+
+    /**
+
+     * Converts a list of Developer objects to a list of DeveloperDTO objects,
+     * to be serialized to JSON.
+     * 
+     * @param developers list of Developer objects to convert
+     * @return list of DeveloperDTO objects, ready to be serialized to DeveloperDTO
+     */
     public List<DeveloperDTO> developersDTO(List<Developer> developers) {
-        List<DeveloperDTO> developersRegistered = new ArrayList<DeveloperDTO>();
+        List<DeveloperDTO> developersRegistered = new ArrayList<>();
         for (Developer d : developers) {
             developersRegistered.add(new DeveloperDTO(d));
         }
         return developersRegistered;
     }
-    
 }

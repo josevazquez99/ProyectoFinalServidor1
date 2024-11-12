@@ -1,11 +1,13 @@
 package com.vedruna.proyectoFinalServidor1.services;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.vedruna.proyectoFinalServidor1.dto.ProjectDTO;
@@ -20,14 +22,27 @@ public class ProjectServiceImpl implements ProjectServiceI {
     ProjectRepositoryI projectRepository;
     
     
+    /**
+     * Gets all projects.
+     *
+     * @param page the page number.
+     * @param size the page size.
+     * @return the list of projects.
+     */
     @Override
-    public List<ProjectDTO> showAllProjects() {
-        return projectRepository.findAll().stream()
-                        .map(ProjectDTO::new)
-                        .collect(Collectors.toList());
-
+    public Page<ProjectDTO> showAllProjects(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size); 
+        Page<Project> projectPage = projectRepository.findAll(pageable); 
+        return projectPage.map(ProjectDTO::new); 
     }
 
+    /**
+    * Retrieves a project by its name.
+    *
+    * @param name The name of the project to retrieve.
+    * @return A ProjectDTO representing the project.
+    * @throws IllegalArgumentException if no project is found with the provided name.
+    */
     @Override
     public ProjectDTO showProjectByName(String name) {
         Project project = projectRepository.findByName(name)
@@ -35,10 +50,22 @@ public class ProjectServiceImpl implements ProjectServiceI {
         return new ProjectDTO(project);
     }
 
+    /**
+     * Saves a project.
+     *
+     * @param project the project to be saved.
+     */
     @Override
     public void saveProject(Project project) {
         projectRepository.save(project);
     }
+    /**
+     * Deletes a project by its ID.
+     *
+     * @param id the ID of the project to be deleted
+     * @return true if the project was successfully deleted, otherwise throws an exception
+     * @throws IllegalArgumentException if no project exists with the given ID
+     */
     public boolean deleteProject(Integer id) {
         Optional<Project> project = projectRepository.findById(id);
     
@@ -46,10 +73,18 @@ public class ProjectServiceImpl implements ProjectServiceI {
             projectRepository.deleteById(id); 
             return true;
         } else {
-            // Lanzamos la excepción si no se encuentra el proyecto
+            // We throw the exception if the project is not found
             throw new IllegalArgumentException("No existe ningún proyecto con el ID: " + id);
         }
     }
+    
+    /**
+     * Updates an existing project.
+     *
+     * @param id the ID of the project to be updated.
+     * @param project the updated project data.
+     * @return true if the project was successfully updated, otherwise returns false if no project is found with the given ID
+     */
     
     public boolean updateProject(Integer id, Project project) {
         Optional<Project> projectToUpdate = projectRepository.findById(id);

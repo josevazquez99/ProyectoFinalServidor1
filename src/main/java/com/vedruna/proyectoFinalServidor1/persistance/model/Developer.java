@@ -53,7 +53,7 @@ public class Developer implements Serializable{
     private String github_url;
 
     
-    @ManyToMany(cascade = {CascadeType.ALL})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name="developers_worked_on_projects", joinColumns={@JoinColumn(name="developers_dev_id")}, inverseJoinColumns={@JoinColumn(name="projects_project_id")})
     private List<Project> projectsDevelopers;
 
