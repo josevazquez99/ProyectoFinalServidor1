@@ -1,20 +1,21 @@
-# Proyecto Final Servidor1: API REST para Gestión de Proyectos
+# Proyecto Final Servidor1 , Jose Antonio Vázquez Fernández
 
 Este proyecto consiste en una API REST para gestionar información de proyectos, desarrolladores y tecnologías. Fue desarrollado en Java utilizando Spring Boot y sigue el patrón Modelo-Vista-Controlador (MVC), usando también Git como sistema de control de versiones.
 
-## Tabla de Contenidos
-- [Descripción General](#descripción-general)
-- [Requisitos](#requisitos)
-- [Estructura del Proyecto](#estructura-del-proyecto)
-- [Instalación y Configuración](#instalación-y-configuración)
-- [Endpoints de la API](#endpoints-de-la-api)
-- [Pruebas](#pruebas)
-- [Documentación Swagger](#Swagger)
+## Índice
+- [Introducción](#Introducción)
+- [Tecnologías](#Tecnologías)
+- [Instalación y Configuración](#Instalación-y-Configuración)
+- [Enlace a figma](#Figma)
+- [Conclusión](#Conclusión)
+- [Contribuciones](#Contribuciones)
+- [Licensias](#Licensias)
+- [Contacto](#Contacto)
 
 
 ---
 
-## Descripción General
+## Introducción
 
 La API permite a los usuarios:
 - Gestionar proyectos, desarrolladores y tecnologías en una base de datos.
@@ -26,32 +27,48 @@ Este proyecto fue desarrollado como parte de la evaluación de un módulo de ser
 
 ---
 
-## Requisitos
+## Tecnologías
 
 Para ejecutar la aplicación, se necesitan las siguientes herramientas:
-- **Java 17** o superior
-- **Maven** o **Gradle** para gestionar dependencias
+- **Java 17**
+- **SpringBoot**
+- **Maven**
 - **MySQL** (u otra base de datos compatible)
-- **Postman** o cualquier herramienta para probar los endpoints
+- **Postman** o **Thunder Client**
 - **Git** para el control de versiones
 
 ---
 
-## Estructura del Proyecto
 
-La aplicación sigue el patrón Modelo-Vista-Controlador:
-- **Modelo**: Entidades que representan las tablas en la base de datos.
-- **Controladores**: Gestionan las peticiones y retornan `ResponseEntity` con códigos de respuesta adecuados.
-- **Servicios**: Implementan la lógica de negocio.
-- **Repositorios**: Interactúan con la base de datos mediante JPA.
-
+## Instalación y Configuración
+- Creamos el proyecto a través del Spring Initializr
+- Modelamos
+- Creamos controladores para nuestros endpoints
+- Creamos los servicios para la implementación de los métodos
+- Creamos nuestro repositorio git y lo enlazamos a nuestro proyecto Spring
 
 ---
 
-## Instalación y Configuración
+## Figma
 
-1. **Clonar el repositorio**:
-git clone https://github.com/josevazquez99/ProyectoFinalServidor1.git
+---
 
-## Swagger
-localhost:8080/swagger-ui.html
+## Conclusión
+Mi proyecto en Spring Boot demuestra una sólida implementación de una API REST para la gestión de proyectos, desarrolladores y tecnologías, utilizando el patrón JPA y paginación. He integrado buenas prácticas como validaciones, manejo de errores, y documentación con Swagger. Además, la gestión de estados y relaciones entre entidades muestra un diseño eficiente y escalable. En resumen, el proyecto cumple con los requisitos técnicos y demuestra una comprensión profunda del desarrollo de APIs robustas y bien estructuradas
+
+---
+## Contribuciones
+Este proyecto está diseñado para permitir que otros desarrolladores colaboren fácilmente. Las contribuciones pueden incluir mejoras en la funcionalidad, optimización del rendimiento, corrección de errores, o la adición de nuevas características. Cualquier persona interesada puede realizar pull requests, seguir las guías de estilo del código y asegurarse de que sus cambios estén bien documentados.
+
+---
+## Licensias
+El proyecto se distribuye bajo una licencia de código abierto, Apache 2.0, lo que permite a otros usar, modificar y distribuir el código de manera libre, siempre que respeten los términos establecidos, como la atribución adecuada. La elección de la licencia dependerá de cómo quieras que otros interactúen con el proyecto y de si deseas imponer restricciones en el uso comercial o en la redistribución.
+---
+## Contacto
+Nombre: Jose Antonio Vázquez Fernández
+Localidad: Sevilla(San José de la Rinconada)
+Correo : joseantonio.vazquez@a.vedrunasevillasj.es
+Fecha Nacimiento: 12/12/1999
+
+
+
