@@ -57,13 +57,17 @@ Para ejecutar la aplicación, se necesitan las siguientes herramientas:
 Mi proyecto en Spring Boot demuestra una sólida implementación de una API REST para la gestión de proyectos, desarrolladores y tecnologías, utilizando el patrón JPA y paginación. He integrado buenas prácticas como validaciones, manejo de errores, y documentación con Swagger. Además, la gestión de estados y relaciones entre entidades muestra un diseño eficiente y escalable. En resumen, el proyecto cumple con los requisitos técnicos y demuestra una comprensión profunda del desarrollo de APIs robustas y bien estructuradas
 
 ---
+
 ## Contribuciones
 Este proyecto está diseñado para permitir que otros desarrolladores colaboren fácilmente. Las contribuciones pueden incluir mejoras en la funcionalidad, optimización del rendimiento, corrección de errores, o la adición de nuevas características. Cualquier persona interesada puede realizar pull requests, seguir las guías de estilo del código y asegurarse de que sus cambios estén bien documentados.
 
 ---
+
 ## Licensias
 El proyecto se distribuye bajo una licencia de código abierto, Apache 2.0, lo que permite a otros usar, modificar y distribuir el código de manera libre, siempre que respeten los términos establecidos, como la atribución adecuada. La elección de la licencia dependerá de cómo quieras que otros interactúen con el proyecto y de si deseas imponer restricciones en el uso comercial o en la redistribución.
+
 ---
+
 ## Contacto
 Nombre: Jose Antonio Vázquez Fernández
 Localidad: Sevilla(San José de la Rinconada)
