@@ -9,10 +9,8 @@ Este proyecto consiste en una API REST para gestionar información de proyectos,
 - [Instalación y Configuración](#instalación-y-configuración)
 - [Endpoints de la API](#endpoints-de-la-api)
 - [Pruebas](#pruebas)
-- [Documentación Swagger](#documentación-swagger)
-- [Errores y Excepciones](#errores-y-excepciones)
-- [Contribuciones](#contribuciones)
-- [Licencia](#licencia)
+- [Documentación Swagger](#Swagger)
+
 
 ---
 
