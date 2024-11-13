@@ -150,9 +150,9 @@ public class ProjectController {
      *         projects to move.
      */
     @PatchMapping("/projects/totesting")
-    public ResponseEntity<String> moveProjectToTesting() {
+    public ResponseEntity<String> moveProjectToTesting(Integer id) {
         try {
-            boolean result = projectService.moveProjectToTesting();
+            boolean result = projectService.moveProjectToTesting(id);
             if (result) {
                 return ResponseEntity.ok("Projects moved to testing successfully");
             } else {
@@ -171,9 +171,9 @@ public class ProjectController {
      *         projects to move.
      */
     @PatchMapping("/projects/toprod")
-    public ResponseEntity<String> moveProjectToProduction() {
+    public ResponseEntity<String> moveProjectToProduction(Integer id) {
         try {
-            boolean result = projectService.moveProjectToProduction();
+            boolean result = projectService.moveProjectToProduction(id);
             if (result) {
                 return ResponseEntity.ok("Projects moved to production successfully");
             } else {
@@ -184,4 +184,3 @@ public class ProjectController {
         }
     }
 }
-

@@ -113,19 +113,22 @@ public class ProjectServiceImpl implements ProjectServiceI {
      * @return true if there are any projects to move, otherwise returns false
      */
     @Override
-    public boolean moveProjectToTesting() {
-        List<Project> projects = projectRepository.findAll();
+    public boolean moveProjectToTesting(Integer id) {
+        Optional<Project> projectOptional = projectRepository.findById(id);
         boolean isUpdated = false;
     
-        for (Project project : projects) {
-                project.getStateProject().setName("Testing");
-                projectRepository.save(project);
-                isUpdated = true;
-            }
-        
+        if (projectOptional.isPresent()) {
+            Project project = projectOptional.get();
+            project.getStateProject().setName("Testing");
+            projectRepository.save(project);
+            isUpdated = true;
+        } else {
+            System.out.println("Project with ID " + id + " does not exist.");
+        }
     
         return isUpdated;
     }
+    
     
 
     
@@ -137,19 +140,22 @@ public class ProjectServiceImpl implements ProjectServiceI {
      * @return true if there are any projects to move, otherwise returns false
      */
     @Override
-    public boolean moveProjectToProduction() {
-        List<Project> projects = projectRepository.findAll();
+    public boolean moveProjectToProduction(Integer id) {
+        Optional<Project> projectOptional = projectRepository.findById(id);
         boolean isUpdated = false;
     
-        for (Project project : projects) {
-                project.getStateProject().setName("Production");
-                projectRepository.save(project);
-                isUpdated = true;
-            
+        if (projectOptional.isPresent()) {
+            Project project = projectOptional.get();
+            project.getStateProject().setName("Production");
+            projectRepository.save(project);
+            isUpdated = true;
+        } else {
+            System.out.println("Project with ID " + id + " does not exist.");
         }
     
         return isUpdated;
     }
+    
     
 
 
