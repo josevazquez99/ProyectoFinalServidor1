@@ -7,6 +7,7 @@ public interface DeveloperServiceI {
 
     void saveDeveloper(Developer developer);
     boolean deleteDeveloper(Integer id);
+    Developer findById(int developerId);
 
 
 

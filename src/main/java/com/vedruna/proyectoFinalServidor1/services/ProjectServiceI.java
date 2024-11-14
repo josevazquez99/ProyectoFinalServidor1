@@ -1,12 +1,13 @@
 package com.vedruna.proyectoFinalServidor1.services;
 
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 
 import com.vedruna.proyectoFinalServidor1.dto.ProjectDTO;
 import com.vedruna.proyectoFinalServidor1.persistance.model.Project;
 
-import jakarta.persistence.criteria.CriteriaBuilder.In;
 
 public interface ProjectServiceI {
 
@@ -17,6 +18,8 @@ public interface ProjectServiceI {
     boolean moveProjectToTesting(Integer id);
     boolean moveProjectToProduction(Integer id);
     boolean updateProject(Integer id, Project project);
+    Project findById(int projectId);
+    List<Project> getProjectsByTechnology(String tech);
 
 
     

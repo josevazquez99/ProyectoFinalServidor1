@@ -65,5 +65,11 @@ public class DeveloperServiceImpl implements DeveloperServiceI {
             throw new IllegalArgumentException("No existe ningún developer con el ID: " + id);
         }
     }
+
+
+    @Override
+    public Developer findById(int developerId) {
+        return developerRepository.findById(developerId).orElse(null);
+    }
     
 }

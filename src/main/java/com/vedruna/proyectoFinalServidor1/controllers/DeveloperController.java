@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.*;
 
 import com.vedruna.proyectoFinalServidor1.dto.ResponseDTO;
 import com.vedruna.proyectoFinalServidor1.persistance.model.Developer;
+import com.vedruna.proyectoFinalServidor1.persistance.model.Project;
 import com.vedruna.proyectoFinalServidor1.services.DeveloperServiceI;
+import com.vedruna.proyectoFinalServidor1.services.ProjectServiceI;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -16,6 +18,10 @@ public class DeveloperController {
 
     @Autowired
     private DeveloperServiceI developerService;
+
+    @Autowired
+    private ProjectServiceI projectService;
+
     /**
      * Creates a new developer.
      *
@@ -45,6 +51,36 @@ public class DeveloperController {
         }
         ResponseDTO<String> response = new ResponseDTO<>("Developer successfully removed", null);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+    }
+
+    /**
+    * Adds a developer to a project.
+    *
+    * @param developerId the ID of the developer to be added
+    * @param projectId the ID of the project to which the developer will be added
+    * @return a ResponseEntity that contains a success message if the operation is successful,
+    *         or an error message if the developer or project is not found
+    */
+    @PostMapping("/developers/worked")
+    public ResponseEntity<?> addDeveloperToProject(@RequestParam int developerId, @RequestParam int projectId) {
+        Developer developer = developerService.findById(developerId);
+        Project project = projectService.findById(projectId);
+        
+        if (developer == null) {
+            return ResponseEntity.badRequest().body("Developer not found");
+        }
+        
+        if (project == null) {
+            return ResponseEntity.badRequest().body("Project not found");
+        }
+        if (!project.getDevelopers().contains(developer)) {
+            project.getDevelopers().add(developer);
+            developer.getProjectsDevelopers().add(project);
+            projectService.saveProject(project);
+            developerService.saveDeveloper(developer);  
+        }
+    
+        return ResponseEntity.ok("Developer added to project");
     }
     
     

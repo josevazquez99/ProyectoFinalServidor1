@@ -20,9 +20,6 @@ public class ProjectServiceImpl implements ProjectServiceI {
     @Autowired
     ProjectRepositoryI projectRepository;
     
-
-    
-    
     /**
      * Gets all projects.
      *
@@ -154,6 +151,16 @@ public class ProjectServiceImpl implements ProjectServiceI {
         }
     
         return isUpdated;
+    }
+
+    @Override
+    public Project findById(int projectId) {
+        return projectRepository.findById(projectId).orElse(null);
+    }
+
+    @Override
+    public List<Project> getProjectsByTechnology(String tech) {
+        return projectRepository.getProjectsByTechnology(tech);
     }
     
     
