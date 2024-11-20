@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import com.vedruna.proyectoFinalServidor1.dto.ProjectDTO;
 import com.vedruna.proyectoFinalServidor1.persistance.model.Project;
 
-import jakarta.persistence.criteria.CriteriaBuilder.In;
 
 public interface ProjectServiceI {
 
