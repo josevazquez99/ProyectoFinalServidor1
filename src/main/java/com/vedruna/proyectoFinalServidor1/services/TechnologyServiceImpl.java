@@ -75,4 +75,7 @@ public class TechnologyServiceImpl implements TechnologyServiceI {
     public Technology findById(int techId) {
         return technologyRepository.findById(techId).orElse(null);
     }
+
+
+
 }

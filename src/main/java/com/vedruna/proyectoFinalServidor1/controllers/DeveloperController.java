@@ -50,8 +50,9 @@ public class DeveloperController {
             throw new IllegalArgumentException("There isn't a developer with the ID: " + id);
         }
         ResponseDTO<String> response = new ResponseDTO<>("Developer successfully removed", null);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response); // Cambié NO_CONTENT por OK
     }
+    
 
     /**
     * Adds a developer to a project.
@@ -61,8 +62,8 @@ public class DeveloperController {
     * @return a ResponseEntity that contains a success message if the operation is successful,
     *         or an error message if the developer or project is not found
     */
-    @PostMapping("/developers/worked")
-    public ResponseEntity<?> addDeveloperToProject(@RequestParam int developerId, @RequestParam int projectId) {
+    @PostMapping("/developers/worked/{projectId}/{developerId}")
+    public ResponseEntity<?> addDeveloperToProject(@PathVariable int developerId, @PathVariable int projectId) {
         Developer developer = developerService.findById(developerId);
         Project project = projectService.findById(projectId);
         

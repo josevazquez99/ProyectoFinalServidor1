@@ -45,8 +45,9 @@ public class TechnologyController {
             throw new IllegalArgumentException("There isn't a technology with the ID: " + id);
         }
         ResponseDTO<String> response = new ResponseDTO<>("Technology successfully removed", null);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response); // Cambié NO_CONTENT por OK
     }
+    
     
     
 }

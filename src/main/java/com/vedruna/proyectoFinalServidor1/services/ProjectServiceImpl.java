@@ -1,5 +1,6 @@
 package com.vedruna.proyectoFinalServidor1.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,9 @@ import org.springframework.stereotype.Service;
 
 import com.vedruna.proyectoFinalServidor1.dto.ProjectDTO;
 import com.vedruna.proyectoFinalServidor1.persistance.model.Project;
+import com.vedruna.proyectoFinalServidor1.persistance.model.State;
 import com.vedruna.proyectoFinalServidor1.persistance.repository.ProjectRepositoryI;
+import com.vedruna.proyectoFinalServidor1.persistance.repository.StateRepositoryI;
 
 @Service
 public class ProjectServiceImpl implements ProjectServiceI {
@@ -18,6 +21,10 @@ public class ProjectServiceImpl implements ProjectServiceI {
     
     @Autowired
     ProjectRepositoryI projectRepository;
+
+    
+    @Autowired
+    StateRepositoryI stateRepository;
     
     /**
      * Gets all projects.
@@ -33,17 +40,26 @@ public class ProjectServiceImpl implements ProjectServiceI {
         return projectPage.map(ProjectDTO::new); 
     }
 
+
     /**
-    * Retrieves a project by its name.
-    *
-    * @param name The name of the project to retrieve.
-    * @return A ProjectDTO representing the project.
-    * @throws IllegalArgumentException if no project is found with the provided name.
-    */
+     * Gets a project by name.
+     * 
+     * @param name the name of the project.
+     * @return the project or a 404 if not found.
+     */
     @Override
     public ProjectDTO showProjectByName(String name) {
-        Project project = projectRepository.findByName(name)
-                .orElseThrow(() -> new IllegalArgumentException("Proyecto no encontrado con el nombre: " + name));
+        List<Project> projects = projectRepository.findAll();
+        Project project = null;
+        for (Project p : projects) {
+            if (p.getName().contains(name)) {
+                project = p;
+                break;
+            }
+        }
+        if (project == null) {
+            throw new IllegalArgumentException("No project found with name containing: " + name);
+        }
         return new ProjectDTO(project);
     }
 
@@ -112,22 +128,22 @@ public class ProjectServiceImpl implements ProjectServiceI {
     public boolean moveProjectToTesting(Integer id) {
         Optional<Project> projectOptional = projectRepository.findById(id);
         boolean isUpdated = false;
-    
         if (projectOptional.isPresent()) {
             Project project = projectOptional.get();
-            project.getStateProject().setName("Testing");
-            projectRepository.save(project);
-            isUpdated = true;
+            // Buscamos el estado por su ID 
+            Optional<State> stateOptional = stateRepository.findById(2);
+            if (stateOptional.isPresent()) {
+                project.setStateProject(stateOptional.get()); // Asignamos el estado
+                projectRepository.save(project); // Guardamos el proyecto con el nuevo estado
+                isUpdated = true;
+            } else {
+                System.out.println("State with ID 2 does not exist.");
+            }
         } else {
             System.out.println("Project with ID " + id + " does not exist.");
         }
-    
         return isUpdated;
     }
-    
-    
-
-    
     
 
     /**
@@ -139,28 +155,39 @@ public class ProjectServiceImpl implements ProjectServiceI {
     public boolean moveProjectToProduction(Integer id) {
         Optional<Project> projectOptional = projectRepository.findById(id);
         boolean isUpdated = false;
-    
         if (projectOptional.isPresent()) {
             Project project = projectOptional.get();
-            project.getStateProject().setName("Production");
-            projectRepository.save(project);
-            isUpdated = true;
+            Optional<State> stateOptional = stateRepository.findById(3);
+            if (stateOptional.isPresent()) {
+                project.setStateProject(stateOptional.get()); // Asignamos el estado
+                projectRepository.save(project); // Guardamos el proyecto con el nuevo estado
+                isUpdated = true;
+            } else {
+                System.out.println("State with ID 3 does not exist.");
+            }
         } else {
             System.out.println("Project with ID " + id + " does not exist.");
         }
-    
         return isUpdated;
     }
+
 
     @Override
     public Project findById(int projectId) {
         return projectRepository.findById(projectId).orElse(null);
     }
 
+    /**
+     * Finds all projects that have a technology with the given name.
+     * 
+     * @param name the name of the technology to search for
+     * @return a list of projects that have a technology with the given name
+     */
     @Override
-    public List<Project> getProjectsByTechnology(String tech) {
-        return projectRepository.getProjectsByTechnology(tech);
+    public List<Project> findProjectsByTechnologies(String technologyName) {
+        return projectRepository.findProjectsByTechnologiesName(technologyName);
     }
+
     
     
 
