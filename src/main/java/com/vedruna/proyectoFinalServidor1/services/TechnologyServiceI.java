@@ -7,6 +7,7 @@ public interface TechnologyServiceI {
 
     void saveTechnology(Technology technology);
     boolean deleteTechnology(Integer id);
+    Technology findById(int techId);
 
 
 

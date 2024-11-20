@@ -1,6 +1,7 @@
 package com.vedruna.proyectoFinalServidor1.persistance.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.vedruna.proyectoFinalServidor1.validation.ValidUrl;
@@ -55,7 +56,7 @@ public class Developer implements Serializable{
     
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name="developers_worked_on_projects", joinColumns={@JoinColumn(name="developers_dev_id")}, inverseJoinColumns={@JoinColumn(name="projects_project_id")})
-    private List<Project> projectsDevelopers;
+    private List<Project> projectsDevelopers = new ArrayList<>();
 
 
 }

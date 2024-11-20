@@ -1,6 +1,7 @@
 package com.vedruna.proyectoFinalServidor1.persistance.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -31,7 +32,7 @@ public class Technology implements Serializable {
 
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(name="technologies_used_in_projects", joinColumns={@JoinColumn(name="technologies_tech_id")}, inverseJoinColumns={@JoinColumn(name="projects_project_id")})
-    private List<Project> projectsTechnologies;
+    private List<Project> projectsTechnologies = new ArrayList<>();
 
 
 

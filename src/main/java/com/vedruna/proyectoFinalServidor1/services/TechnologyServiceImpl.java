@@ -69,4 +69,10 @@ public class TechnologyServiceImpl implements TechnologyServiceI {
             throw new IllegalArgumentException("No existe ninguna tecnología con el ID: " + id);
         }
     }
+
+
+    @Override
+    public Technology findById(int techId) {
+        return technologyRepository.findById(techId).orElse(null);
+    }
 }

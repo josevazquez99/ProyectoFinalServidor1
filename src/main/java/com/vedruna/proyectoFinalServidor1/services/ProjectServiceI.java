@@ -1,6 +1,8 @@
 package com.vedruna.proyectoFinalServidor1.services;
 
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 
 import com.vedruna.proyectoFinalServidor1.dto.ProjectDTO;
@@ -16,6 +18,8 @@ public interface ProjectServiceI {
     boolean moveProjectToTesting(Integer id);
     boolean moveProjectToProduction(Integer id);
     boolean updateProject(Integer id, Project project);
+    Project findById(int projectId);
+    List<Project> getProjectsByTechnology(String tech);
 
 
     
