@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import com.vedruna.proyectoFinalServidor1.dto.ProjectDTO;
 import com.vedruna.proyectoFinalServidor1.dto.ResponseDTO;
 import com.vedruna.proyectoFinalServidor1.persistance.model.Project;
-import com.vedruna.proyectoFinalServidor1.persistance.model.Technology;
 import com.vedruna.proyectoFinalServidor1.services.ProjectServiceI;
-import com.vedruna.proyectoFinalServidor1.services.TechnologyServiceI;
 
 import jakarta.validation.Valid;
 
@@ -27,8 +25,7 @@ public class ProjectController {
     @Autowired
     private ProjectServiceI projectService;
 
-    @Autowired
-    private TechnologyServiceI technologyService;
+
 
     /**
      * Gets all projects.
@@ -195,7 +192,13 @@ public class ProjectController {
         }
     }
 
-     /**
+
+
+
+
+   
+    
+    /**
      * Gets all projects by a given technology.
      * 
      * @param tech The name of the technology to search for.
@@ -203,45 +206,18 @@ public class ProjectController {
      *         there are projects with the given technology, or a 404 if there are no
      *         projects with that technology.
      */
-
-    @GetMapping("/projects/tec/{name}")
-    public ResponseEntity<ResponseDTO<Object>> findProjectsByTechnology(@PathVariable String name) {
-        List<Project> projects = projectService.findProjectsByTechnologies(name);
+    @GetMapping("/projects/tec/{tech}")
+    public ResponseEntity<ResponseDTO<List<Project>>> getProjectsByTechnology(@PathVariable String tech) {
+        List<Project> projects = projectService.getProjectsByTechnology(tech);
         if (projects.isEmpty()) {
-            ResponseDTO<Object> response = new ResponseDTO<>("No projects found", "There are no projects with the technology: " + name);
+            ResponseDTO<List<Project>> response = new ResponseDTO<>("No projects found with this technology", null);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
-        ResponseDTO<Object> response = new ResponseDTO<>("Projects found successfully", projects);
+        ResponseDTO<List<Project>> response = new ResponseDTO<>("Projects found successfully", projects);
         return ResponseEntity.ok(response);
     }
-
-    /**
-     * Adds a technology to a project.
-     * 
-     * @param projectId the ID of the project to which the technology will be added.
-     * @param techId the ID of the technology to be added.
-     * @return a ResponseEntity containing a success message if the technology was
-     *         successfully added, or an error message if the project or technology
-     *         is not found.
-     */
-    @PostMapping("/technologies/used/{projectId}/{techId}")
-    public ResponseEntity<?> addTechnologyToProject(@PathVariable int projectId, @PathVariable int techId) {
-        Project project = projectService.findById(projectId);
-        Technology technology = technologyService.findById(techId);
-        if (project == null) {
-            return ResponseEntity.badRequest().body("Project not found");
-        }
-        if (technology == null) {
-            return ResponseEntity.badRequest().body("Technology not found");
-        }
-        if (!project.getTechnologies().contains(technology)) {
-            project.getTechnologies().add(technology);
-            technology.getProjectsTechnologies().add(project);
-            projectService.saveProject(project);
-            technologyService.saveTechnology(technology);
-        }
-        return ResponseEntity.ok("Technology added to project");
-    }
+    
+    
 
     
 }

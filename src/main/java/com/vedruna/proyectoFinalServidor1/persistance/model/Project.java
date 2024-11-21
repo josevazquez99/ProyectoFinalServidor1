@@ -2,6 +2,7 @@ package com.vedruna.proyectoFinalServidor1.persistance.model;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.vedruna.proyectoFinalServidor1.validation.ValidUrl;
@@ -67,9 +68,9 @@ public class Project implements Serializable {
     private State stateProject;
 
     @ManyToMany(cascade = {CascadeType.ALL}, mappedBy="projectsTechnologies")
-    private List<Technology> technologies;
+    private List<Technology> technologies = new ArrayList<>();
 
     @ManyToMany(cascade = {CascadeType.ALL}, mappedBy="projectsDevelopers")
-    private List<Developer> developers;
+    private List<Developer> developers = new ArrayList<>();
 
 }

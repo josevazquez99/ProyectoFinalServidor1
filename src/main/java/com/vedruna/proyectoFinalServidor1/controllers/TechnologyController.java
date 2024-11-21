@@ -47,6 +47,23 @@ public class TechnologyController {
         ResponseDTO<String> response = new ResponseDTO<>("Technology successfully removed", null);
         return ResponseEntity.status(HttpStatus.OK).body(response); // Cambié NO_CONTENT por OK
     }
+    /**
+     * Associate a technology with a project.
+     * 
+     * @param technologyId the ID of the technology to be used
+     * @param projectId the ID of the project
+     * @return a ResponseEntity with the HTTP status 200 (OK) and a success message
+     */
+    @PostMapping("/technologies/used/{projectId}/{technologyId}")
+    public ResponseEntity<String> associateTechnologyWithProject(@PathVariable int projectId, @PathVariable int technologyId) {
+        try {
+            technologyService.associateTechnologyWithProject(projectId, technologyId);
+            return ResponseEntity.status(HttpStatus.OK).body("Technology associated with project successfully");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
     
     
     

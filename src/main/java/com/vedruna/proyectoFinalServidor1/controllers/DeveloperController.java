@@ -1,5 +1,6 @@
 package com.vedruna.proyectoFinalServidor1.controllers;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,7 +63,7 @@ public class DeveloperController {
     * @return a ResponseEntity that contains a success message if the operation is successful,
     *         or an error message if the developer or project is not found
     */
-    @PostMapping("/developers/worked/{projectId}/{developerId}")
+    @PostMapping("/developers/worked/{developerId}/{projectId}")
     public ResponseEntity<?> addDeveloperToProject(@PathVariable int developerId, @PathVariable int projectId) {
         Developer developer = developerService.findById(developerId);
         Project project = projectService.findById(projectId);

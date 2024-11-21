@@ -18,9 +18,8 @@ public interface ProjectServiceI {
     boolean moveProjectToTesting(Integer id);
     boolean moveProjectToProduction(Integer id);
     boolean updateProject(Integer id, Project project);
-    Project findById(int projectId);
-    List<Project> findProjectsByTechnologies(String name);
-
+    Project findById(Integer projectId);
+    List<Project> getProjectsByTechnology(String techName);
 
     
 } 

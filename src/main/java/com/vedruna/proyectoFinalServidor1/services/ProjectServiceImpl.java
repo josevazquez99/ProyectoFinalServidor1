@@ -172,22 +172,21 @@ public class ProjectServiceImpl implements ProjectServiceI {
     }
 
 
-    @Override
-    public Project findById(int projectId) {
-        return projectRepository.findById(projectId).orElse(null);
-    }
-
     /**
-     * Finds all projects that have a technology with the given name.
-     * 
-     * @param name the name of the technology to search for
-     * @return a list of projects that have a technology with the given name
-     */
+    * Finds a project by its ID.
+    *
+    * @param projectId the ID of the project to be found
+    * @return an Optional containing the found project, or an empty Optional if no project is found with the given ID
+    */
     @Override
-    public List<Project> findProjectsByTechnologies(String technologyName) {
-        return projectRepository.findProjectsByTechnologiesName(technologyName);
+    public Project findById(Integer projectId) {
+        return projectRepository.findById(projectId).orElse(null); 
     }
 
+    @Override
+    public List<Project> getProjectsByTechnology(String techName) {
+        return projectRepository.findProjectsByTechnology(techName);
+    }
     
     
 

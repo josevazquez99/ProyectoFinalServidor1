@@ -67,8 +67,9 @@ public class DeveloperServiceImpl implements DeveloperServiceI {
     }
 
 
+
     @Override
-    public Developer findById(int developerId) {
+    public Developer findById(Integer developerId) {
         return developerRepository.findById(developerId).orElse(null);
     }
     

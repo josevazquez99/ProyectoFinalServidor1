@@ -30,7 +30,7 @@ public class Technology implements Serializable {
     @Column(name="tech_name")
     private String name;
 
-    @ManyToMany(cascade = {CascadeType.ALL})
+    @ManyToMany(cascade = {CascadeType.PERSIST})
     @JoinTable(name="technologies_used_in_projects", joinColumns={@JoinColumn(name="technologies_tech_id")}, inverseJoinColumns={@JoinColumn(name="projects_project_id")})
     private List<Project> projectsTechnologies = new ArrayList<>();
 

@@ -71,11 +71,35 @@ public class TechnologyServiceImpl implements TechnologyServiceI {
     }
 
 
-    @Override
-    public Technology findById(int techId) {
-        return technologyRepository.findById(techId).orElse(null);
+    /**
+     * Finds a technology by its ID.
+     * 
+     * @param techId the ID of the technology to be found
+     * @return an Optional containing the technology if found, otherwise an empty Optional
+     */
+    public Technology findById(Integer techId) {
+        return technologyRepository.findById(techId).orElse(null); 
     }
 
+
+    /**
+    * Associates a technology with a project.
+    *
+    * @param technologyId the ID of the technology to associate
+    * @param projectId the ID of the project to associate with
+    * @throws IllegalArgumentException if the technology or project with the given IDs is not found
+    */
+    @Override
+    public void associateTechnologyWithProject(int projectId, int technologyId) {
+        Technology technology = technologyRepository.findById(technologyId).orElseThrow(() -> 
+            new IllegalArgumentException("Technology with ID " + technologyId + " not found"));
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> 
+            new IllegalArgumentException("Project with ID " + projectId + " not found"));
+        project.getTechnologies().add(technology);
+        technology.getProjectsTechnologies().add(project);
+        projectRepository.save(project);
+        technologyRepository.save(technology);
+    }
 
 
 }
