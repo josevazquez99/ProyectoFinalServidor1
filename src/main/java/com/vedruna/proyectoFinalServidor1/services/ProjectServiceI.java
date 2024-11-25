@@ -19,7 +19,7 @@ public interface ProjectServiceI {
     boolean moveProjectToProduction(Integer id);
     boolean updateProject(Integer id, Project project);
     Project findById(Integer projectId);
-    List<Project> getProjectsByTechnology(String techName);
+    List<ProjectDTO> getProjectsByTechnology(String techName);
 
     
 } 

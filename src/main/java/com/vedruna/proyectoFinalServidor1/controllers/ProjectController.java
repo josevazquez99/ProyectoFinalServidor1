@@ -207,15 +207,18 @@ public class ProjectController {
      *         projects with that technology.
      */
     @GetMapping("/projects/tec/{tech}")
-    public ResponseEntity<ResponseDTO<List<Project>>> getProjectsByTechnology(@PathVariable String tech) {
-        List<Project> projects = projectService.getProjectsByTechnology(tech);
+    public ResponseEntity<ResponseDTO<List<ProjectDTO>>> getProjectsByTechnology(@PathVariable String tech) {
+        List<ProjectDTO> projects = projectService.getProjectsByTechnology(tech);
+    
         if (projects.isEmpty()) {
-            ResponseDTO<List<Project>> response = new ResponseDTO<>("No projects found with this technology", null);
+            ResponseDTO<List<ProjectDTO>> response = new ResponseDTO<>("No projects found with this technology", null);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
-        ResponseDTO<List<Project>> response = new ResponseDTO<>("Projects found successfully", projects);
+    
+        ResponseDTO<List<ProjectDTO>> response = new ResponseDTO<>("Projects found successfully", projects);
         return ResponseEntity.ok(response);
     }
+    
     
     
 

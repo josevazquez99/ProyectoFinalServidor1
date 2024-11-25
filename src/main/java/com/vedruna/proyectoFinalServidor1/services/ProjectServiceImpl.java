@@ -184,7 +184,7 @@ public class ProjectServiceImpl implements ProjectServiceI {
     }
 
     @Override
-    public List<Project> getProjectsByTechnology(String techName) {
+    public List<ProjectDTO> getProjectsByTechnology(String techName) {
         return projectRepository.findProjectsByTechnology(techName);
     }
     
