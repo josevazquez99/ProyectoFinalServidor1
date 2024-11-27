@@ -82,10 +82,11 @@ public class ProjectController {
 
     // Verificar si start_date es antes de hoy
     LocalDate today = LocalDate.now();
-    if (project.getStart_date().toLocalDate().isBefore(today)) {
-        ResponseDTO<Object> response = new ResponseDTO<>("Validation Error", "The start date cannot be before today.");
+    if (!project.getStart_date().toLocalDate().isBefore(today) && !project.getEnd_date().toLocalDate().isBefore(project.getStart_date().toLocalDate())) {
+        ResponseDTO<Object> response = new ResponseDTO<>("Validation Error", "The start date must be before today.");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
+
 
     // Guardar el proyecto si no hay errores
     projectService.saveProject(project);
