@@ -39,7 +39,6 @@ public class ProjectController {
         return projectService.showAllProjects(page, size);
     }
     
-
     /**
      * Gets a project by name.
      *
@@ -47,11 +46,14 @@ public class ProjectController {
      * @return the project or a 404 if not found.
      */
     @GetMapping("/projects/{name}")
-    public ResponseEntity<ResponseDTO<ProjectDTO>> showProjectByName(@PathVariable String name) {
-        ProjectDTO project = projectService.showProjectByName(name);
-        ResponseDTO<ProjectDTO> response = new ResponseDTO<>("Project found successfully", project);
-        return ResponseEntity.ok(response);
-    }   
+    public ResponseEntity<Page<ProjectDTO>> getProjectsByName(
+        @PathVariable String name,
+        @RequestParam("page") int page,
+        @RequestParam("size") int size) {
+    Page<ProjectDTO> projects = projectService.showProjectsByName(name, page, size);
+    return ResponseEntity.ok(projects);
+    }
+
 
 
  

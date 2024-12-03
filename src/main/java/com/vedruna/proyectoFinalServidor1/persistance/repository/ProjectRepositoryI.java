@@ -13,7 +13,7 @@ import com.vedruna.proyectoFinalServidor1.persistance.model.Project;
 
 
 public interface ProjectRepositoryI extends JpaRepository<Project, Integer> {
-    public Optional<Project> findByName(String name);
+    public Page<Project> findByNameContaining(String name, Pageable pageable);
     Page<Project> findAll(Pageable pageable);
     @Query("SELECT p FROM Project p JOIN p.technologies t WHERE t.name = :techName")
     List<ProjectDTO> findProjectsByTechnology(String techName);

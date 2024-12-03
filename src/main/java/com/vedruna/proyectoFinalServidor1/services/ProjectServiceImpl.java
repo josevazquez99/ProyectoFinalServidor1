@@ -48,20 +48,17 @@ public class ProjectServiceImpl implements ProjectServiceI {
      * @return the project or a 404 if not found.
      */
     @Override
-    public ProjectDTO showProjectByName(String name) {
-        List<Project> projects = projectRepository.findAll();
-        Project project = null;
-        for (Project p : projects) {
-            if (p.getName().contains(name)) {
-                project = p;
-                break;
-            }
-        }
-        if (project == null) {
+    public Page<ProjectDTO> showProjectsByName(String name, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Project> projectPage = projectRepository.findByNameContaining(name, pageable);
+    
+        if (projectPage.isEmpty()) {
             throw new IllegalArgumentException("No project found with name containing: " + name);
         }
-        return new ProjectDTO(project);
+    
+        return projectPage.map(ProjectDTO::new);
     }
+
 
     /**
      * Saves a project.
