@@ -15,6 +15,11 @@ import com.vedruna.proyectoFinalServidor1.dto.ResponseDTO;
 import com.vedruna.proyectoFinalServidor1.persistance.model.Project;
 import com.vedruna.proyectoFinalServidor1.services.ProjectServiceI;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 
 @RestController
@@ -25,115 +30,103 @@ public class ProjectController {
     @Autowired
     private ProjectServiceI projectService;
 
-
-
-    /**
-     * Gets all projects.
-     *
-     * @param page the page number.
-     * @param size the page size.
-     * @return the list of projects.
-     */
+    @Operation(summary = "Retrieve all projects", description = "Fetches a paginated list of all projects.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Projects retrieved successfully",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Page.class))})
+    })
     @GetMapping("/projects")
     public Page<ProjectDTO> getAllProjects(@RequestParam("page") int page, @RequestParam("size") int size) {
         return projectService.showAllProjects(page, size);
     }
-    
-    /**
-     * Gets a project by name.
-     *
-     * @param name the name of the project.
-     * @return the project or a 404 if not found.
-     */
+
+    @Operation(summary = "Search projects by name", description = "Fetches a paginated list of projects filtered by name.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Projects retrieved successfully",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Page.class))}),
+            @ApiResponse(responseCode = "404", description = "No projects found with the provided name",
+                    content = @Content)
+    })
     @GetMapping("/projects/{name}")
     public ResponseEntity<Page<ProjectDTO>> getProjectsByName(
-        @PathVariable String name,
-        @RequestParam("page") int page,
-        @RequestParam("size") int size) {
-    Page<ProjectDTO> projects = projectService.showProjectsByName(name, page, size);
-    return ResponseEntity.ok(projects);
+            @PathVariable String name,
+            @RequestParam("page") int page,
+            @RequestParam("size") int size) {
+        Page<ProjectDTO> projects = projectService.showProjectsByName(name, page, size);
+        return ResponseEntity.ok(projects);
     }
 
-
-
- 
-    /**
-     * Saves a project.
-     *
-     * @param project the project to be saved.
-     * @param bindingResult the binding result for validation errors.
-     * @return a ResponseEntity containing a ResponseDTO with either a success
-     *         message and the saved project, or an error message if validation
-     *         fails or the project's start date is before today.
-     */
-
+    @Operation(summary = "Create a new project", description = "Adds a new project to the database.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Project created successfully",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class))}),
+            @ApiResponse(responseCode = "400", description = "Validation error",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class))})
+    })
     @PostMapping("/projects")
     public ResponseEntity<ResponseDTO<Object>> postProject(@Valid @RequestBody Project project, BindingResult bindingResult) {
-    // Verificar si hay errores de validación
-    if (bindingResult.hasErrors()) {
-        StringBuilder errorMessages = new StringBuilder();
-        bindingResult.getFieldErrors().forEach(error -> 
-            errorMessages.append(error.getField())
-                         .append(": ")
-                         .append(error.getDefaultMessage())
-                         .append("\n")
-        );
-        ResponseDTO<Object> response = new ResponseDTO<>("Validation Error", errorMessages.toString());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        if (bindingResult.hasErrors()) {
+            StringBuilder errorMessages = new StringBuilder();
+            bindingResult.getFieldErrors().forEach(error ->
+                    errorMessages.append(error.getField())
+                            .append(": ")
+                            .append(error.getDefaultMessage())
+                            .append("\n")
+            );
+            ResponseDTO<Object> response = new ResponseDTO<>("Validation Error", errorMessages.toString());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+
+        LocalDate today = LocalDate.now();
+        if (project.getStart_date().toLocalDate().isBefore(today)) {
+            ResponseDTO<Object> response = new ResponseDTO<>("Validation Error", "The start date cannot be before today.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+
+        projectService.saveProject(project);
+        ResponseDTO<Object> response = new ResponseDTO<>("Project created successfully", null);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    // Verificar si start_date es antes de hoy
-    LocalDate today = LocalDate.now();
-    if (!project.getStart_date().toLocalDate().isBefore(today) && !project.getEnd_date().toLocalDate().isBefore(project.getStart_date().toLocalDate())) {
-        ResponseDTO<Object> response = new ResponseDTO<>("Validation Error", "The start date must be before today.");
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-    }
+    @Operation(summary = "Delete a project", description = "Deletes a project by its ID.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Project deleted successfully",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class))}),
+            @ApiResponse(responseCode = "404", description = "Project not found",
+                    content = @Content)
+    })
 
-
-    // Guardar el proyecto si no hay errores
-    projectService.saveProject(project);
-    ResponseDTO<Object> response = new ResponseDTO<>("Project created successfully", null); // Mensaje sin detalles
-    return ResponseEntity.status(HttpStatus.CREATED).body(response);
-}
-
-     
-    
-    /**
-     * Deletes a project.
-     *
-     * @param id the ID of the project to be deleted.
-     * @return the response with the deleted project or a 404 if there isn't any project with the given ID.
-     */
     @DeleteMapping("/projects/{id}")
     public ResponseEntity<ResponseDTO<String>> deleteProject(@PathVariable Integer id) {
         boolean projectDeleted = projectService.deleteProject(id);
         if (!projectDeleted) {
-            throw new IllegalArgumentException("There isn't any project with the ID:" + id);
+            throw new IllegalArgumentException("There isn't any project with the ID: " + id);
         }
         ResponseDTO<String> response = new ResponseDTO<>("Project deleted successfully", "Project with ID " + id + " deleted.");
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
-    /**
-    * Updates an existing project.
-    *
-    * @param id the ID of the project to be updated.
-    * @param project the updated project data.
-    * @param bindingResult the binding result for validation errors.
-    * @return a ResponseEntity containing a ResponseDTO with either a success 
-    *         message and the updated project, or an error message if validation 
-    *         fails or the project is not found.
-    */
+
+    @Operation(summary = "Update a project", description = "Updates the details of an existing project.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Project updated successfully",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class))}),
+            @ApiResponse(responseCode = "400", description = "Validation error",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Project not found",
+                    content = @Content)
+    })
+
     @PutMapping("/projects/{id}")
     public ResponseEntity<ResponseDTO<Object>> updateProject(@PathVariable Integer id, @Valid @RequestBody Project project, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             StringBuilder errorMessages = new StringBuilder();
-            bindingResult.getFieldErrors().forEach(error -> 
-                errorMessages.append(error.getField())
-                             .append(": ")
-                             .append(error.getDefaultMessage())
-                             .append("\n")
+            bindingResult.getFieldErrors().forEach(error ->
+                    errorMessages.append(error.getField())
+                            .append(": ")
+                            .append(error.getDefaultMessage())
+                            .append("\n")
             );
-            
+
             ResponseDTO<Object> response = new ResponseDTO<>("Validation Error", errorMessages.toString());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
@@ -147,15 +140,15 @@ public class ProjectController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-
-
-    /**
-     * Moves all projects to testing state.
-     *
-     * @return a ResponseEntity with a String body and a status of 200 if the
-     *         operation is successful, or a status of 404 if there are no
-     *         projects to move.
-     */
+    @Operation(summary = "Update a project state", description = "Updates the state of an existing project.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Project updated successfully",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class))}),
+            @ApiResponse(responseCode = "400", description = "Validation error",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Project not found",
+                    content = @Content)
+    })
     @PatchMapping("/projects/totesting/{id}")
     public ResponseEntity<String> moveProjectToTesting(@PathVariable Integer id) {
         try {
@@ -172,13 +165,15 @@ public class ProjectController {
         }
     }
     
-    /**
-     * Moves all projects to production state.
-     *
-     * @return a ResponseEntity with a String body and a status of 200 if the
-     *         operation is successful, or a status of 404 if there are no
-     *         projects to move.
-     */
+    @Operation(summary = "Update a project state", description = "Updates the state of an existing project.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Project updated successfully",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class))}),
+            @ApiResponse(responseCode = "400", description = "Validation error",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Project not found",
+                    content = @Content)
+    })
     @PatchMapping("/projects/toprod/{id}")
     public ResponseEntity<String> moveProjectToProduction(@PathVariable Integer id) {
         try {
@@ -195,20 +190,15 @@ public class ProjectController {
         }
     }
 
-
-
-
-
-   
-    
-    /**
-     * Gets all projects by a given technology.
-     * 
-     * @param tech The name of the technology to search for.
-     * @return a ResponseEntity with a ResponseDTO containing a list of Projects if
-     *         there are projects with the given technology, or a 404 if there are no
-     *         projects with that technology.
-     */
+    @Operation(summary = "Get projects by technology", description = "Fetches a list of projects filtered by technology.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Project retrieved successfully",
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ResponseDTO.class))}),
+            @ApiResponse(responseCode = "400", description = "Validation error",
+                    content = @Content),
+            @ApiResponse(responseCode = "404", description = "Project not found",
+                    content = @Content)
+    })
     @GetMapping("/projects/tec/{tech}")
     public ResponseEntity<ResponseDTO<List<ProjectDTO>>> getProjectsByTechnology(@PathVariable String tech) {
         List<ProjectDTO> projects = projectService.getProjectsByTechnology(tech);
